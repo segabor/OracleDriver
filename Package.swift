@@ -5,15 +5,19 @@ import PackageDescription
 
 let package = Package(
     name: "OracleDriver",
+    platforms: [
+       .macOS(.v10_15)
+    ],
+
     products: [
         // Products define the executables and libraries produced by a package, and make them visible to other packages.
         .library(
-            name: "OracleDriver",
-            targets: ["OracleDriver"]),
+            name: "OracleDriver", targets: ["OracleDriver"])
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
+        .package(url: "https://github.com/vapor/sql-kit.git", from: "3.0.0-rc.1.2")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -22,11 +26,9 @@ let package = Package(
             .brew(["odpi"])
         ]),
 
-        .target(
-            name: "OracleDriver",
-            dependencies: ["Codpi"]),
-        .testTarget(
-            name: "OracleDriverTests",
-            dependencies: ["OracleDriver"]),
+        .target(name: "OracleDriver", dependencies: [
+            .product(name: "SQLKit", package: "sql-kit")
+        ]),
+        .testTarget(name: "OracleDriverTests", dependencies: ["OracleDriver"])
     ]
 )
